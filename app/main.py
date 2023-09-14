@@ -1,6 +1,7 @@
-from fastapi import FastAPI
 import uvicorn
-from routers.post import post_router
+from api.api_v1.api import api_router
+from db.base import Base, engine
+from fastapi import FastAPI
 
 
 def create_app() -> FastAPI:
@@ -12,7 +13,8 @@ def create_app() -> FastAPI:
         description="fastapi 테스트 코드 연습장",
         version="1.0.0",
     )
-    _app.include_router(post_router, prefix="/posts", tags=["게시판 - posts"])
+    Base.metadata.create_all(bind=engine)
+    _app.include_router(api_router, prefix='/api/v1')
     return _app
 
 
